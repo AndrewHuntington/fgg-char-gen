@@ -4,7 +4,6 @@ export const characterState: CharacterState = {
   stats: {
     strength: {
       value: undefined,
-      isExceptional: false,
       exceptionalValue: undefined,
     },
     dexterity: {

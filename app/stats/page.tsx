@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { useState, useContext } from "react";
-import { CharacterStatNameLong, StatBlock } from "@/utils/types";
+import { CharacterStatNames } from "@/utils/types";
 import { diceRoller } from "@/utils/diceRoller";
 import { CharacterStatsContext } from "@/context/characterStats/CharacterStatsProvider";
+import { CharacterState } from "@/utils/types";
 
 export default function StatsPage() {
   const { characterStats, setCharacterStats } = useContext(
     CharacterStatsContext
   );
 
-  const STATS: CharacterStatNameLong = [
+  const STATS: CharacterStatNames = [
     "strength",
     "dexterity",
     "constitution",
@@ -20,34 +21,43 @@ export default function StatsPage() {
     "charisma",
   ];
 
-  const [hasRolled, setHasRolled] = useState<boolean>(false);
-  const [stats, setStats] = useState<StatBlock>({
-    strength: undefined,
-    dexterity: undefined,
-    constitution: undefined,
-    intelligence: undefined,
-    wisdom: undefined,
-    charisma: undefined,
-  });
+  // TODO: Have stats survive refresh
 
+  const [hasRolled, setHasRolled] = useState<boolean>(false);
   const rollForStats = (): void => {
     if (!hasRolled) setHasRolled((hasRolled) => !hasRolled);
-    STATS.map((stat) =>
-      setStats((prevStats) => ({ ...prevStats, [stat]: diceRoller.roll3d6() }))
-    );
-    console.log(characterStats);
+    STATS.forEach((stat) => {
+      setCharacterStats((prevStats: CharacterState) => {
+        const newStats = {
+          ...prevStats,
+          stats: {
+            ...prevStats.stats,
+            [stat]: { value: diceRoller.roll3d6() },
+          },
+        };
+
+        if (stat === "strength" && newStats.stats.strength.value === 18) {
+          newStats.stats.strength.exceptionalValue = diceRoller.roll1d100();
+        }
+
+        return newStats;
+      });
+    });
   };
 
   return (
     <main>
+      {/* TODO: Replace with form to allow user to input stats */}
       <h1>Stats Page</h1>
       {STATS.map((stat) => {
         return (
           <div key={stat}>
             <p>
-              {stat.slice(0, 3).toUpperCase()}: {stats[stat]}{" "}
-              {stat === "strength" && stats[stat] === 18
-                ? `/ ${diceRoller.roll1d100()}`
+              {stat.slice(0, 3).toUpperCase()}:{" "}
+              {characterStats.stats[stat].value}{" "}
+              {stat === "strength" &&
+              characterStats.stats.strength.exceptionalValue
+                ? `/ ${characterStats.stats.strength.exceptionalValue}`
                 : ""}
             </p>
           </div>

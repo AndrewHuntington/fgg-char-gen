@@ -1,4 +1,4 @@
-export type CharacterStatNameLong = [
+export type CharacterStatNames = [
   "strength",
   "dexterity",
   "constitution",
@@ -7,22 +7,19 @@ export type CharacterStatNameLong = [
   "charisma"
 ];
 
-export type CharacterStatNameShort = ["str", "dex", "con", "int", "wis", "cha"];
-
-export interface StatBlock {
-  strength: undefined | number;
-  dexterity: undefined | number;
-  constitution: undefined | number;
-  intelligence: undefined | number;
-  wisdom: undefined | number;
-  charisma: undefined | number;
-}
+export type CharacterStatNamesShortened = [
+  "str",
+  "dex",
+  "con",
+  "int",
+  "wis",
+  "cha"
+];
 
 export interface CharacterState {
   stats: {
     strength: {
       value: number | undefined;
-      isExceptional: boolean;
       exceptionalValue: number | undefined;
     };
     dexterity: {

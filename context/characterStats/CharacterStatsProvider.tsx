@@ -4,9 +4,12 @@ import { createContext, useState } from "react";
 import { characterState } from "./state/characterState";
 import { CharacterState } from "@/utils/types";
 
-export const CharacterStatsContext = createContext({
+export const CharacterStatsContext = createContext<{
+  characterStats: CharacterState;
+  setCharacterStats: React.Dispatch<React.SetStateAction<CharacterState>>;
+}>({
   characterStats: characterState,
-  setCharacterStats: (characterStats: CharacterState) => {},
+  setCharacterStats: () => {},
 });
 
 export function CharacterStatsContextProvider({
