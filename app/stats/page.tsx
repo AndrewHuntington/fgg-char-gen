@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { CHARACTER_STAT_NAMES_LONG, STAT_BLOCK } from "@/utils/types";
+import { useState, useContext } from "react";
+import { CharacterStatNameLong, StatBlock } from "@/utils/types";
 import { diceRoller } from "@/utils/diceRoller";
+import { CharacterStatsContext } from "@/context/characterStats/CharacterStatsProvider";
 
 export default function StatsPage() {
-  const STATS: CHARACTER_STAT_NAMES_LONG = [
+  const { characterStats, setCharacterStats } = useContext(
+    CharacterStatsContext
+  );
+
+  const STATS: CharacterStatNameLong = [
     "strength",
     "dexterity",
     "constitution",
@@ -16,7 +21,7 @@ export default function StatsPage() {
   ];
 
   const [hasRolled, setHasRolled] = useState<boolean>(false);
-  const [stats, setStats] = useState<STAT_BLOCK>({
+  const [stats, setStats] = useState<StatBlock>({
     strength: undefined,
     dexterity: undefined,
     constitution: undefined,
@@ -30,6 +35,7 @@ export default function StatsPage() {
     STATS.map((stat) =>
       setStats((prevStats) => ({ ...prevStats, [stat]: diceRoller.roll3d6() }))
     );
+    console.log(characterStats);
   };
 
   return (
